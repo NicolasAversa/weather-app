@@ -12,6 +12,13 @@ interface Weather {
   cloudPercentage: number;
 }
 
+type WeatherForecast = Pick<
+  Weather,
+  "temperature" | "windSpeed" | "cloudPercentage" | "humidity"
+> & {
+  date: Date;
+};
+
 enum WeatherTypes {
   SUNNY = "sunny",
   CLOUDY = "cloudy",
@@ -19,5 +26,5 @@ enum WeatherTypes {
   RAIN = "rain",
 }
 
-export type { Weather };
+export type { Weather, WeatherForecast };
 export { WeatherTypes };

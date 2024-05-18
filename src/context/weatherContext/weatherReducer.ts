@@ -1,8 +1,5 @@
-import {
-  WeatherInformation,
-  WeatherState,
-  WeatherForecast,
-} from "./WeatherContext";
+import { Weather, WeatherForecast } from "@/types";
+import { WeatherState } from "./WeatherContext";
 
 enum ActionTypes {
   SET_LOCATION_WEATHER = "SET_LOCATION_WEATHER",
@@ -13,7 +10,7 @@ enum ActionTypes {
 
 type SetLocationWeatherValue = {
   location: string;
-  weather: WeatherInformation;
+  weather: Weather;
 };
 
 type SetLocationForecastValue = {

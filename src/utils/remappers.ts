@@ -1,13 +1,14 @@
 import {
-  WeatherInformation,
+  CurrentWeatherApiResponse,
+  ForecastApiResponse,
+  Weather,
   WeatherForecast,
-} from "@/context/weatherContext/WeatherContext";
-import { CurrentWeatherApiResponse, ForecastApiResponse } from "@/types";
+} from "@/types";
 import { parse } from "date-fns";
 
 const remapWeatherInformation = (
   weather: CurrentWeatherApiResponse
-): WeatherInformation => {
+): Weather => {
   return {
     cloudPercentage: weather.current.cloud,
     humidity: weather.current.humidity,

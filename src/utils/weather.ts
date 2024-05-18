@@ -1,9 +1,6 @@
-import { WeatherInformation } from "@/context/weatherContext/WeatherContext";
-import { WeatherTypes } from "@/types";
+import { Weather, WeatherTypes } from "@/types";
 
-const getWeatherTypeFromWeather = (
-  weather: WeatherInformation
-): WeatherTypes => {
+const getWeatherTypeFromWeather = (weather: Weather): WeatherTypes => {
   const { cloudPercentage, humidity } = weather;
   if (humidity >= 70 && cloudPercentage >= 75) return WeatherTypes.RAIN;
   if (cloudPercentage >= 75) return WeatherTypes.CLOUDS;

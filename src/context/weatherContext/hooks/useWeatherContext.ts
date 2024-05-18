@@ -1,11 +1,8 @@
 import { useContext } from "react";
-import {
-  WeatherContext,
-  WeatherForecast,
-  WeatherInformation,
-} from "../WeatherContext";
+import { WeatherContext } from "../WeatherContext";
 import { ActionTypes } from "../weatherReducer";
 import { useLocalStorage } from "@/hooks";
+import { Weather, WeatherForecast } from "@/types";
 
 export const useWeatherContext = () => {
   const context = useContext(WeatherContext);
@@ -17,7 +14,7 @@ export const useWeatherContext = () => {
   const { state, dispatch } = context;
 
   const dispatchers = {
-    setLocationWeather: (location: string, value: WeatherInformation): void =>
+    setLocationWeather: (location: string, value: Weather): void =>
       dispatch({
         type: ActionTypes.SET_LOCATION_WEATHER,
         value: { location, weather: value },
@@ -49,7 +46,7 @@ export const useWeatherContext = () => {
     isCityWeatherCached: (city: string): boolean => !!state.locations[city],
     isCityForecastCached: (city: string): boolean =>
       !!state.locationForecasts[city],
-    getCurrentCityWeather: (city?: string): WeatherInformation | undefined =>
+    getCurrentCityWeather: (city?: string): Weather | undefined =>
       city ? state.locations[city] : undefined,
     isFavoriteCity: (city: string): boolean =>
       state.favoriteCities.includes(city),

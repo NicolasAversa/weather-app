@@ -3,13 +3,25 @@ import { BoxProps } from "@mui/material";
 interface MarginProps
   extends Pick<
     BoxProps,
-    "margin" | "marginLeft" | "marginTop" | "marginRight" | "marginBottom"
+    | "margin"
+    | "marginLeft"
+    | "marginTop"
+    | "marginRight"
+    | "marginBottom"
+    | "marginX"
+    | "marginY"
   > {}
 
 interface PaddingProps
   extends Pick<
     BoxProps,
-    "padding" | "paddingLeft" | "paddingTop" | "paddingRight" | "paddingBottom"
+    | "padding"
+    | "paddingLeft"
+    | "paddingTop"
+    | "paddingRight"
+    | "paddingBottom"
+    | "paddingX"
+    | "paddingY"
   > {}
 
 interface BorderProps

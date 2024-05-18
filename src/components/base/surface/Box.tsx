@@ -1,4 +1,5 @@
 import { Box as MuiBox } from "@mui/material";
+import { ReactNode } from "react";
 import {
   BackgroundProps,
   BorderRadiusProps,
@@ -10,7 +11,9 @@ interface BoxProps
   extends MarginProps,
     PaddingProps,
     BorderRadiusProps,
-    BackgroundProps {}
+    BackgroundProps {
+  children?: ReactNode;
+}
 
 const Box = ({ backgroundColor, ...rest }: BoxProps) => {
   return (

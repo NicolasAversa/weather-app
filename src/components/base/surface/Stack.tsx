@@ -1,4 +1,5 @@
-import { Stack as MuiStack } from "@mui/material";
+import { ReactNode } from "react";
+import { Stack as MuiStack, StackProps as MuiStackProps } from "@mui/material";
 import {
   BackgroundProps,
   BorderRadiusProps,
@@ -12,7 +13,10 @@ interface StackProps
     PaddingProps,
     BorderRadiusProps,
     BackgroundProps,
-    FlexboxProps {}
+    FlexboxProps,
+    Pick<MuiStackProps, "direction" | "spacing"> {
+  children?: ReactNode;
+}
 
 const Stack = ({ backgroundColor, ...rest }: StackProps) => {
   return (

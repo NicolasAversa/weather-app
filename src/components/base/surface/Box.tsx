@@ -1,7 +1,6 @@
 import { Box as MuiBox } from "@mui/material";
 import {
   BackgroundProps,
-  BorderProps,
   BorderRadiusProps,
   MarginProps,
   PaddingProps,
@@ -10,7 +9,6 @@ import {
 interface BoxProps
   extends MarginProps,
     PaddingProps,
-    BorderProps,
     BorderRadiusProps,
     BackgroundProps {}
 

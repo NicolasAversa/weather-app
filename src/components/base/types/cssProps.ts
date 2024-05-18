@@ -35,6 +35,17 @@ interface BackgroundProps {
   backgroundColor?: string;
 }
 
+interface FlexboxProps
+  extends Pick<
+    BoxProps,
+    | "justifyContent"
+    | "justifyItems"
+    | "justifySelf"
+    | "alignContent"
+    | "alignItems"
+    | "alignSelf"
+  > {}
+
 export type {
   MarginProps,
   PaddingProps,
@@ -44,4 +55,5 @@ export type {
   TransformProps,
   SizeProps,
   BackgroundProps,
+  FlexboxProps,
 };

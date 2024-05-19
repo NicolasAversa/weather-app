@@ -1,4 +1,4 @@
-import { thirdPartyBaseUrls } from "@/constants";
+import { dateFormats, thirdPartyBaseUrls } from "@/constants";
 import { ForecastApiResponse, WeatherForecast } from "@/types";
 import { httpGet } from "@/utils/api";
 import { remapForecast } from "@/utils/remappers";
@@ -30,7 +30,11 @@ export default async function getForecast(
     }
     if (!startDay) throw new Error("startDay parameter is missing");
 
-    const initialDate = parse(startDay as string, "yyyy-MM-dd", new Date());
+    const initialDate = parse(
+      startDay as string,
+      dateFormats.yearMonthDay,
+      new Date()
+    );
 
     if (!days) throw new Error("days parameter is missing");
 
@@ -41,7 +45,7 @@ export default async function getForecast(
 
     const promises = interval.map(
       async (date): Promise<WeatherForecast[] | undefined> => {
-        const formatDate = format(date, "yyyy-MM-dd");
+        const formatDate = format(date, dateFormats.yearMonthDay);
 
         const url = new URL(baseUrl);
         url.searchParams.append("q", city as string);
@@ -59,7 +63,7 @@ export default async function getForecast(
     );
 
     const response = await Promise.all(promises);
-    res.status(200).json(response);
+    res.status(200).json(response.flat());
   } catch (error) {
     console.error(error);
     res.status(500).json(error);

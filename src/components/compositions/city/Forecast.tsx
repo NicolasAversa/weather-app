@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { Box, Stack, Text } from "@/components/base";
+import { dateFormats } from "@/constants";
 
 interface ForecastItemProps {
   date: Date;
@@ -22,7 +23,7 @@ function ForecastItem({
         paddingX={2}
         paddingY={1}
       >
-        <Text>{format(date, "d MMM")}</Text>
+        <Text>{format(date, dateFormats.dayMonth)}</Text>
         <Stack direction="row" justifyContent="space-between">
           <Text>{maximumTemperature}</Text>
           <Text>----</Text>

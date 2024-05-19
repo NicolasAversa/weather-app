@@ -58,6 +58,14 @@ interface FlexboxProps
     | "alignSelf"
   > {}
 
+enum Sizes {
+  EXTRA_SMALL = "extraSmall",
+  SMALL = "small",
+  MEDIUM = "medium",
+  LARGE = "large",
+  EXTRA_LARGE = "extraLarge",
+}
+
 export type {
   MarginProps,
   PaddingProps,
@@ -69,3 +77,4 @@ export type {
   BackgroundProps,
   FlexboxProps,
 };
+export { Sizes };

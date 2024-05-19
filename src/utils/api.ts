@@ -1,23 +1,44 @@
 import { thirdPartyBaseUrls } from "@/constants";
 import {
   Api64Response,
-  CurrentWeatherApiResponse,
-  ForecastApiResponse,
   IpLookupResponse,
+  Weather,
+  WeatherForecast,
 } from "@/types";
+import { format } from "date-fns";
+
+interface HttpsClientOptions extends RequestInit {
+  onFetchError?: () => void;
+}
+
+const httpGet = async <TResponse>(
+  url: string,
+  { onFetchError, ...restOptions }: HttpsClientOptions
+): Promise<TResponse | undefined> => {
+  try {
+    const response = await fetch(encodeURI(url), restOptions);
+
+    if (!response.ok) {
+      onFetchError && onFetchError();
+    }
+
+    const parsedResponse: TResponse = await response.json();
+    return parsedResponse;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const fetchWeatherByCityName = async (
   name: string
-): Promise<CurrentWeatherApiResponse | undefined> => {
+): Promise<Weather | undefined> => {
   try {
-    const response = await fetch(encodeURI(`/api/weather?city=${name}`));
+    const response = await httpGet<Weather>(`/api/weather?city=${name}`, {
+      onFetchError: () =>
+        console.error(`Error fetching current weather for: ${name}`),
+    });
 
-    if (!response.ok) {
-      throw new Error(`Error fetching current city weather for ${name}`);
-    }
-
-    const weather: CurrentWeatherApiResponse = await response.json();
-    return weather;
+    return response;
   } catch (error) {
     console.error(error);
   }
@@ -25,12 +46,16 @@ const fetchWeatherByCityName = async (
 
 const fetchIpFromClient = async (): Promise<string | undefined> => {
   try {
-    const response = await fetch(`${thirdPartyBaseUrls.api64}?format=json`);
-    if (!response.ok) {
-      throw new Error("Error getting client's IP address");
-    }
-    const parsedResponse: Api64Response = await response.json();
-    return parsedResponse.ip;
+    const response = await httpGet<Api64Response>(
+      `${thirdPartyBaseUrls.api64}?format=json`,
+      {
+        onFetchError: () => console.error("Error getting client's IP address"),
+      }
+    );
+
+    if (!response) return;
+
+    return response.ip;
   } catch (error) {
     console.error(error);
   }
@@ -38,12 +63,17 @@ const fetchIpFromClient = async (): Promise<string | undefined> => {
 
 const fetchCityFromIp = async (ip: string): Promise<string | undefined> => {
   try {
-    const response = await fetch(`/api/client-city?ip=${ip}`);
-    if (!response.ok) {
-      throw new Error("Error getting city from client's IP address");
-    }
-    const parsedResponse: IpLookupResponse = await response.json();
-    return parsedResponse.city;
+    const response = await httpGet<IpLookupResponse>(
+      `/api/client-city?ip=${ip}`,
+      {
+        onFetchError: () =>
+          console.error("Error getting city from client's IP address"),
+      }
+    );
+
+    if (!response) return;
+
+    return response.city;
   } catch (error) {
     console.error(error);
   }
@@ -51,16 +81,19 @@ const fetchCityFromIp = async (ip: string): Promise<string | undefined> => {
 
 const fetchWeatherForecastByCityName = async (
   name: string
-): Promise<ForecastApiResponse | undefined> => {
+): Promise<WeatherForecast[] | undefined> => {
   try {
-    const response = await fetch(encodeURI(`/api/forecast?city=${name}`));
-
-    if (!response.ok) {
-      throw new Error(`Error fetching current city weather for ${name}`);
-    }
-
-    const weather: ForecastApiResponse = await response.json();
-    return weather;
+    const response = await httpGet<WeatherForecast[]>(
+      `/api/forecast?city=${name}&startDay=${format(
+        new Date(),
+        "yyyy-MM-dd"
+      )}&days=${5}`,
+      {
+        onFetchError: () =>
+          console.error(`Error fetching current city weather for ${name}`),
+      }
+    );
+    return response;
   } catch (error) {
     console.error(error);
   }
@@ -71,4 +104,5 @@ export {
   fetchIpFromClient,
   fetchCityFromIp,
   fetchWeatherForecastByCityName,
+  httpGet,
 };

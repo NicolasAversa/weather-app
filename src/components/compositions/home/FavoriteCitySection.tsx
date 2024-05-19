@@ -2,36 +2,46 @@ import { useEffect, useState } from "react";
 import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
 import Link from "next/link";
 import { ROUTES } from "@/constants";
-import { WeatherInformation } from "@/context/weatherContext/WeatherContext";
 import { fetchWeatherByCityName } from "@/utils/api";
-import { remapWeatherInformation } from "@/utils/remappers";
 import { getWeatherTypeFromWeather } from "@/utils/weather";
-import { Box, Heading, Stack, Text } from "@/components/base";
-import { WeatherIcon } from "@/components/compositions";
+import { Heading, Stack, Text } from "@/components/base";
+import { WeatherIcon, DegreesIndicator } from "@/components/compositions";
+import { Weather } from "@/types";
 
 interface FavoriteCityItemProps {
   city: string;
-  weather?: WeatherInformation;
+  weather?: Weather;
 }
 
 function FavoriteCityItem({ city, weather }: FavoriteCityItemProps) {
   return (
     <Link
       key={city}
-      href={encodeURI(`/${ROUTES.CITY_DETAILS}/${city}`)}
+      href={encodeURI(`${ROUTES.CITY_DETAILS}/${city}`)}
       passHref
+      style={{ textDecoration: "none" }}
     >
-      <Box padding={2.5} backgroundColor="#FDFCFC" borderRadius={2}>
-        <Heading as="h5">{city}</Heading>
+      <Stack
+        padding={2.5}
+        backgroundColor="#FDFCFC"
+        borderRadius={2}
+        justifyContent="space-between"
+        alignItems="center"
+        direction="row"
+      >
         {weather ? (
-          <Stack direction="row" justifyContent="space-between">
-            <Heading as="h2" fontWeight="semiBold">
-              {weather.temperature.celsius}
-            </Heading>
+          <>
+            <Stack alignItems="start">
+              <Heading as="h5">{city}</Heading>
+              <DegreesIndicator
+                temperature={weather.temperature.celsius}
+                scale="celsius"
+              />
+            </Stack>
             <WeatherIcon type={getWeatherTypeFromWeather(weather)} />
-          </Stack>
+          </>
         ) : null}
-      </Box>
+      </Stack>
     </Link>
   );
 }
@@ -54,10 +64,7 @@ function FavoriteCitySection() {
       const results = await Promise.all(locationPromises);
       results.forEach((weather, index) => {
         if (!weather) return;
-        setLocationWeather(
-          favoriteCities[index],
-          remapWeatherInformation(weather)
-        );
+        setLocationWeather(favoriteCities[index], weather);
       });
     })();
   }, []);
@@ -73,7 +80,11 @@ function FavoriteCitySection() {
   return (
     <Stack spacing={1}>
       {favoriteCities.map((city) => (
-        <FavoriteCityItem city={city} weather={getCurrentCityWeather(city)} />
+        <FavoriteCityItem
+          key={city}
+          city={city}
+          weather={getCurrentCityWeather(city)}
+        />
       ))}
     </Stack>
   );

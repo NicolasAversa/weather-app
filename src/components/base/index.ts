@@ -2,3 +2,8 @@ export * from "./surface/Box";
 export * from "./surface/Stack";
 export * from "./typography/Text";
 export * from "./typography/Heading";
+export * from "./feedback/Skeleton";
+export * from "./form/TextInput";
+export * from "./form/Button";
+export * from "./dataDisplay/Icon";
+export * from "./navigation/LinkButton";

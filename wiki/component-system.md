@@ -45,7 +45,7 @@ A mora graphical structure would be this one:
 
 After declaring the basics and being sure about how the Design System should visualize and behave, then we will use those components and create our product taking advantage of all the web enhancement provided by the knowledge we concretize at the time we used to create the base components.
 
-The idea of the compositions components is to also crate folders but it's castegorization shouldn't be related to the HTML function of the component but instead to the product meaning it brings to the company. For example, this can be a possible organization:
+The idea of the compositions components is to also crate folders but it's categorization shouldn't be related to the HTML function of the component but instead to the product meaning it brings to the company. For example, this can be a possible organization:
 
 ```txt
 📁 src/

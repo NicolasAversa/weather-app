@@ -23,7 +23,7 @@ function FavoriteCityItem({ city, weather }: FavoriteCityItemProps) {
     >
       <Stack
         padding={2.5}
-        backgroundColor="#FDFCFC"
+        backgroundColor="#EBEBEB"
         borderRadius={2}
         justifyContent="space-between"
         alignItems="center"
@@ -49,7 +49,7 @@ function FavoriteCityItem({ city, weather }: FavoriteCityItemProps) {
 function FavoriteCitySection() {
   const {
     state: { favoriteCities },
-    helpers: { getCurrentCityWeather },
+    helpers: { getCityRealTimeWeather },
     dispatchers: { setLocationWeather },
   } = useWeatherContext();
   const [isClient, setIsClient] = useState(false);
@@ -83,7 +83,7 @@ function FavoriteCitySection() {
         <FavoriteCityItem
           key={city}
           city={city}
-          weather={getCurrentCityWeather(city)}
+          weather={getCityRealTimeWeather(city)}
         />
       ))}
     </Stack>

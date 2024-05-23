@@ -1,0 +1,23 @@
+name: App PR Checks
+on:
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Execute Automation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+          cache: "yarn"
+          registry-url: "https://npm.pkg.github.com"
+      - name: Install npm packages
+        run: yarn install --frozen-lockfile
+      - name: Run Typescript analyzer
+        run: yarn ts:check

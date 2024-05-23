@@ -1,5 +1,5 @@
 import { useState, useEffect, ChangeEvent } from "react";
-import { Button, Stack, TextInput } from "@/components/base";
+import { Button, LinkButton, Stack, TextInput } from "@/components/base";
 import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
 import { fetchWeatherByCityName } from "@/utils/api";
 import {
@@ -8,7 +8,7 @@ import {
 } from "@/components/compositions";
 import { useAutoDetectClientCity } from "@/hooks";
 import { format } from "date-fns";
-import { dateFormats } from "@/constants";
+import { ROUTES, dateFormats } from "@/constants";
 
 export default function Home() {
   const [inputCity, setInputCity] = useState<string>();
@@ -52,7 +52,7 @@ export default function Home() {
       <Stack direction="row" spacing={1}>
         <TextInput
           onChange={handleCityInputChange}
-          value={city}
+          value={inputCity}
           leftIcon="search"
           fullWidth
         />
@@ -88,6 +88,13 @@ export default function Home() {
           ]}
         />
       ) : null}
+      <LinkButton
+        href={`${ROUTES.CITY_DETAILS}/${city}`}
+        variant="outlined"
+        fullWidth
+      >
+        View detailed weather
+      </LinkButton>
     </Stack>
   );
 }

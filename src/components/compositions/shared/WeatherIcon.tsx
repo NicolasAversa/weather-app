@@ -1,8 +1,8 @@
 import Image from "next/image";
-import clouds from "../../../../public/icons/weatherTypes/clouds.svg";
-import cloudy from "../../../../public/icons/weatherTypes/cloudy.svg";
-import raining from "../../../../public/icons/weatherTypes/raining.svg";
-import sunny from "../../../../public/icons/weatherTypes/sunny.svg";
+import clouds from "@/assets/icons/weatherTypes/clouds.svg";
+import cloudy from "@/assets/icons/weatherTypes/cloudy.svg";
+import raining from "@/assets/icons/weatherTypes/raining.svg";
+import sunny from "@/assets/icons/weatherTypes/sunny.svg";
 import { WeatherTypes } from "@/types";
 
 enum IconSize {

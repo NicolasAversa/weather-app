@@ -6,6 +6,7 @@ const HomeSkeleton = () => {
     <Stack direction="column" spacing={3}>
       <Skeleton variant="rectangular" height={325} />
       <Skeleton variant="rectangular" height={88} />
+      <Skeleton variant="rectangular" height={36} />
     </Stack>
   );
 };

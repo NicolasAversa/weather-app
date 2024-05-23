@@ -1,39 +1,18 @@
-import { Stack } from "@mui/material";
-import React, { useEffect } from "react";
-import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
+import { Heading, Stack } from "@/components/base";
 import { getWeatherTypeFromWeather } from "@/utils/weather";
-import { Heading } from "@/components/base";
 import {
   DegreesIndicator,
   FavoriteButton,
   WeatherIcon,
 } from "@/components/compositions";
-import { fetchWeatherByCityName } from "@/utils/api";
+import { Weather } from "@/types";
 
-interface CurrentWeatherProps {
-  city: string;
+interface RealtimeWeatherReportProps {
+  weather: Weather;
 }
 
-function CurrentWeather({ city }: CurrentWeatherProps) {
-  const {
-    dispatchers: { setLocationWeather },
-    helpers: { getCurrentCityWeather, isCityWeatherCached },
-  } = useWeatherContext();
-
-  useEffect(() => {
-    (async function () {
-      if (city && !isCityWeatherCached(city)) {
-        const weatherResponse = await fetchWeatherByCityName(city);
-        if (!weatherResponse) return;
-        setLocationWeather(city, weatherResponse);
-      }
-    })();
-  }, [city]);
-
-  const weatherInformation = getCurrentCityWeather(city);
-  if (!weatherInformation) return null;
-
-  const weatherIconType = getWeatherTypeFromWeather(weatherInformation);
+function RealtimeWeatherReport({ weather }: RealtimeWeatherReportProps) {
+  const weatherIconType = getWeatherTypeFromWeather(weather);
 
   return (
     <Stack alignItems="center" spacing={4}>
@@ -41,12 +20,12 @@ function CurrentWeather({ city }: CurrentWeatherProps) {
       <Stack spacing={1} alignItems="center">
         <Stack direction="row">
           <Heading as="h4" fontWeight="semiBold">
-            {city}
+            {weather.city}
           </Heading>
-          <FavoriteButton city={city} />
+          <FavoriteButton city={weather.city} />
         </Stack>
         <DegreesIndicator
-          temperature={weatherInformation?.temperature.celsius}
+          temperature={weather.temperature.celsius}
           scale="celsius"
           size="large"
         />
@@ -55,4 +34,4 @@ function CurrentWeather({ city }: CurrentWeatherProps) {
   );
 }
 
-export { CurrentWeather };
+export { RealtimeWeatherReport };

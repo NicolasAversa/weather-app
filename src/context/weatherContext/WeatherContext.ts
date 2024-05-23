@@ -5,6 +5,7 @@ import { Weather, WeatherForecast } from "@/types";
 type Dispatch = (action: Action) => void;
 
 interface WeatherState {
+  clientCity?: string;
   locations: Record<string, Weather>;
   locationForecasts: Record<string, WeatherForecast[]>;
   favoriteCities: string[];

@@ -2,10 +2,11 @@ import { Weather, WeatherForecast } from "@/types";
 import { WeatherState } from "./WeatherContext";
 
 enum ActionTypes {
-  SET_LOCATION_WEATHER = "SET_LOCATION_WEATHER",
-  SET_LOCATION_FORECAST = "SET_LOCATION_FORECAST",
-  ADD_LOCATION_TO_FAVORITES = "ADD_LOCATION_TO_FAVORITES",
-  REMOVE_LOCATION_TO_FAVORITES = "REMOVE_LOCATION_TO_FAVORITES",
+  SET_LOCATION_WEATHER,
+  SET_LOCATION_FORECAST,
+  ADD_LOCATION_TO_FAVORITES,
+  REMOVE_LOCATION_TO_FAVORITES,
+  SET_CLIENT_CITY,
 }
 
 type SetLocationWeatherValue = {
@@ -32,10 +33,20 @@ type Action =
         | ActionTypes.ADD_LOCATION_TO_FAVORITES
         | ActionTypes.REMOVE_LOCATION_TO_FAVORITES;
       value: { location: string };
+    }
+  | {
+      type: ActionTypes.SET_CLIENT_CITY;
+      value: string;
     };
 
 const weatherReducer = (state: WeatherState, action: Action): WeatherState => {
   switch (action.type) {
+    case ActionTypes.SET_CLIENT_CITY: {
+      return {
+        ...state,
+        clientCity: action.value,
+      };
+    }
     case ActionTypes.SET_LOCATION_WEATHER: {
       return {
         ...state,

@@ -40,6 +40,12 @@ export const useWeatherContext = () => {
         context.state.favoriteCities.filter((city) => city !== location)
       );
     },
+    setClientCity: (city: string): void => {
+      dispatch({
+        type: ActionTypes.SET_CLIENT_CITY,
+        value: city,
+      });
+    },
   };
 
   const helpers = {

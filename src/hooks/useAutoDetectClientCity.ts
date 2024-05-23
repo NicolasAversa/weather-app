@@ -1,18 +1,32 @@
+import { useWeatherContext } from "@/context";
 import { fetchIpFromClient, fetchCityFromIp } from "@/utils/api";
 import { useEffect, useState } from "react";
 
-const useAutoDetectClientCity = () => {
-  const [city, setCity] = useState<string>();
-  const [isLoading, setIsLoading] = useState<boolean>();
+interface UseAutoDetectClientCityReturn {
+  city?: string;
+  isLoading: boolean;
+}
+
+const useAutoDetectClientCity = (): UseAutoDetectClientCityReturn => {
+  const {
+    state: { clientCity },
+    dispatchers: { setClientCity },
+  } = useWeatherContext();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async function () {
       try {
+        if (clientCity) return;
+
+        setIsLoading(true);
         const clientIp = await fetchIpFromClient();
         if (!clientIp) return;
 
-        const clientCity = await fetchCityFromIp(clientIp);
-        setCity(clientCity);
+        const city = await fetchCityFromIp(clientIp);
+        if (!city) return;
+
+        setClientCity(city);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -20,7 +34,7 @@ const useAutoDetectClientCity = () => {
     })();
   }, []);
 
-  return { city, isDetectingCity: isLoading };
+  return { city: clientCity, isLoading };
 };
 
 export { useAutoDetectClientCity };

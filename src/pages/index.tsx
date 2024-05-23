@@ -11,6 +11,7 @@ import {
   CurrentWeatherDisplay,
   RealtimeWeatherReport,
 } from "@/components/compositions";
+import { useAutoDetectClientCity } from "@/hooks";
 
 export default function Home() {
   const [city, setCity] = useState<string>();
@@ -19,16 +20,12 @@ export default function Home() {
     dispatchers: { setLocationWeather },
     helpers: { isCityWeatherCached },
   } = useWeatherContext();
+  const { city: clientCity } = useAutoDetectClientCity();
   const cityWeatherReport = city ? locations[city] : null;
 
   useEffect(() => {
-    (async function () {
-      const clientIp = await fetchIpFromClient();
-      if (!clientIp) return;
-      const clientCity = await fetchCityFromIp(clientIp);
-      setCity(clientCity);
-    })();
-  }, []);
+    setCity(clientCity);
+  }, [clientCity]);
 
   useEffect(() => {
     (async function () {

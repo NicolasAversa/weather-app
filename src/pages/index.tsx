@@ -1,19 +1,17 @@
-import { useState, useEffect } from "react";
-import { Heading, Stack, TextInput } from "@/components/base";
+import { useState, useEffect, ChangeEvent } from "react";
+import { Button, Stack, TextInput } from "@/components/base";
 import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
+import { fetchWeatherByCityName } from "@/utils/api";
 import {
-  fetchCityFromIp,
-  fetchIpFromClient,
-  fetchWeatherByCityName,
-} from "@/utils/api";
-import {
-  FavoriteCitySection,
-  CurrentWeatherDisplay,
   RealtimeWeatherReport,
+  DetailedWeatherInformation,
 } from "@/components/compositions";
 import { useAutoDetectClientCity } from "@/hooks";
+import { format } from "date-fns";
+import { dateFormats } from "@/constants";
 
 export default function Home() {
+  const [inputCity, setInputCity] = useState<string>();
   const [city, setCity] = useState<string>();
   const {
     state: { locations },
@@ -21,10 +19,13 @@ export default function Home() {
     helpers: { isCityWeatherCached },
   } = useWeatherContext();
   const { city: clientCity } = useAutoDetectClientCity();
+
   const cityWeatherReport = city ? locations[city] : null;
 
   useEffect(() => {
+    if (!clientCity) return;
     setCity(clientCity);
+    setInputCity(clientCity);
   }, [clientCity]);
 
   useEffect(() => {
@@ -38,20 +39,55 @@ export default function Home() {
     })();
   }, [city]);
 
+  const handleCityInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputCity(event.target.value);
+  };
+
+  const handleCitySearchClick = () => {
+    setCity(inputCity);
+  };
+
   return (
     <Stack direction="column" spacing={3}>
-      <TextInput
-        onChange={(event) => setCity(event.target.value)}
-        value={city}
-      />
+      <Stack direction="row" spacing={1}>
+        <TextInput
+          onChange={handleCityInputChange}
+          value={city}
+          leftIcon="search"
+          fullWidth
+        />
+        <Button variant="text" size="small" onClick={handleCitySearchClick}>
+          Search
+        </Button>
+      </Stack>
       {cityWeatherReport ? (
         <RealtimeWeatherReport weather={cityWeatherReport} />
       ) : null}
-      {city ? <CurrentWeatherDisplay city={city} /> : null}
-      <Stack spacing={1}>
-        <Heading as="h5">Favorite cities</Heading>
-        <FavoriteCitySection />
-      </Stack>
+      {cityWeatherReport ? (
+        <DetailedWeatherInformation
+          items={[
+            {
+              label: "Local time",
+              value: format(
+                cityWeatherReport.localTime,
+                dateFormats.hourMinutes
+              ),
+            },
+            {
+              label: "Wind speed",
+              value: `${cityWeatherReport.windSpeed.kilometersPerHour} Km/h`,
+            },
+            {
+              label: "Humidity",
+              value: `${cityWeatherReport.humidity}%`,
+            },
+            {
+              label: "Clouds",
+              value: `${cityWeatherReport.cloudPercentage}%`,
+            },
+          ]}
+        />
+      ) : null}
     </Stack>
   );
 }

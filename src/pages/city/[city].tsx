@@ -23,8 +23,7 @@ export default function Location() {
         const forecast = await fetchWeatherForecastByCityName(city as string);
         if (!forecast) return;
 
-        const remappedForecast = remapForecast(forecast);
-        setLocationForecast(city as string, remappedForecast);
+        setLocationForecast(city as string, forecast);
       }
     })();
   }, [city]);
@@ -37,9 +36,9 @@ export default function Location() {
         {weatherInformation.map((weather) => (
           <ForecastItem
             date={weather.date}
-            cloudPercentage={weather.cloudPercentage}
-            maximumTemperature={weather.temperature.celsius}
-            minimumTemperature={weather.temperature.celsius}
+            cloudPercentage={weather.humidity}
+            maximumTemperature={weather.maximumTemperature.celsius}
+            minimumTemperature={weather.minimumTemperature.celsius}
           />
         ))}
       </Stack>

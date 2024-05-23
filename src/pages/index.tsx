@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Heading, Stack } from "@/components/base";
+import { Heading, Stack, TextInput } from "@/components/base";
 import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
 
 import {
@@ -7,7 +7,6 @@ import {
   fetchIpFromClient,
   fetchWeatherByCityName,
 } from "@/utils/api";
-import { remapWeatherInformation } from "@/utils/remappers";
 import {
   FavoriteCitySection,
   CurrentWeatherDisplay,
@@ -35,7 +34,7 @@ export default function Home() {
       if (city && !isCityWeatherCached(city)) {
         const weatherResponse = await fetchWeatherByCityName(city);
         if (weatherResponse) {
-          setLocationWeather(city, remapWeatherInformation(weatherResponse));
+          setLocationWeather(city, weatherResponse);
         }
       }
     })();
@@ -43,7 +42,10 @@ export default function Home() {
 
   return (
     <Stack direction="column" spacing={3}>
-      {/* <TextInput onChange={setCity} value={city} /> */}
+      <TextInput
+        onChange={(event) => setCity(event.target.value)}
+        value={city}
+      />
       {city ? <CurrentWeather city={city} /> : null}
       {city ? <CurrentWeatherDisplay city={city} /> : null}
       <Stack spacing={1}>

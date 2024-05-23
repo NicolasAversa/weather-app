@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Heading, Stack, TextInput } from "@/components/base";
 import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
-
 import {
   fetchCityFromIp,
   fetchIpFromClient,
@@ -10,15 +9,17 @@ import {
 import {
   FavoriteCitySection,
   CurrentWeatherDisplay,
-  CurrentWeather,
+  RealtimeWeatherReport,
 } from "@/components/compositions";
 
 export default function Home() {
   const [city, setCity] = useState<string>();
   const {
+    state: { locations },
     dispatchers: { setLocationWeather },
     helpers: { isCityWeatherCached },
   } = useWeatherContext();
+  const cityWeatherReport = city ? locations[city] : null;
 
   useEffect(() => {
     (async function () {
@@ -46,7 +47,9 @@ export default function Home() {
         onChange={(event) => setCity(event.target.value)}
         value={city}
       />
-      {city ? <CurrentWeather city={city} /> : null}
+      {cityWeatherReport ? (
+        <RealtimeWeatherReport weather={cityWeatherReport} />
+      ) : null}
       {city ? <CurrentWeatherDisplay city={city} /> : null}
       <Stack spacing={1}>
         <Heading as="h5">Favorite cities</Heading>

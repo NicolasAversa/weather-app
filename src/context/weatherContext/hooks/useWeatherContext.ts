@@ -52,8 +52,10 @@ export const useWeatherContext = () => {
     isCityWeatherCached: (city: string): boolean => !!state.locations[city],
     isCityForecastCached: (city: string): boolean =>
       !!state.locationForecasts[city],
-    getCurrentCityWeather: (city?: string): Weather | undefined =>
+    getCityRealTimeWeather: (city?: string): Weather | undefined =>
       city ? state.locations[city] : undefined,
+    getCityWeatherForecast: (city?: string): WeatherForecast[] | undefined =>
+      city ? state.locationForecasts[city] : undefined,
     isFavoriteCity: (city: string): boolean =>
       state.favoriteCities.includes(city),
   };

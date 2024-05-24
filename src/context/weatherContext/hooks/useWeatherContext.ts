@@ -3,10 +3,14 @@ import { WeatherContext } from "../WeatherContext";
 import { ActionTypes } from "../weatherReducer";
 import { useLocalStorage } from "@/hooks";
 import { Weather, WeatherForecast } from "@/types";
+import { FAVORITE_CITIES_LOCAL_STORAGE_ID } from "@/constants/ids";
 
 export const useWeatherContext = () => {
   const context = useContext(WeatherContext);
-  const [_, setFavoriteCities] = useLocalStorage("favoriteCities", []);
+  const [_, setFavoriteCities] = useLocalStorage(
+    FAVORITE_CITIES_LOCAL_STORAGE_ID,
+    []
+  );
 
   if (context === undefined) {
     throw new Error("useWeatherContext must be used within a WeatherProvider");

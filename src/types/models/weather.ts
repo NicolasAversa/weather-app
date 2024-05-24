@@ -1,7 +1,11 @@
 interface Weather {
-  city: string;
-  region: string;
-  localTime: string;
+  location: {
+    name: string;
+    region: string;
+    id: string;
+    label: string;
+    localTime: string;
+  };
   temperature: {
     celsius: number;
     fahrenheit: number;
@@ -16,10 +20,7 @@ interface Weather {
   uv: number;
 }
 
-type WeatherForecast = Pick<
-  Weather,
-  "city" | "region" | "localTime" | "humidity" | "uv"
-> & {
+type WeatherForecast = Pick<Weather, "location" | "humidity" | "uv"> & {
   maximumTemperature: Weather["temperature"];
   minimumTemperature: Weather["temperature"];
   maximumWindSpeed: Weather["windSpeed"];

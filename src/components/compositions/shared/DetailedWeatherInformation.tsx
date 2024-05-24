@@ -8,35 +8,43 @@ interface WeatherInformationItemProps {
 
 interface DetailedWeatherInformationProps {
   items: WeatherInformationItemProps[];
+  itemsPerRow?: number;
 }
 
 function WeatherInfoItem({ label, value }: WeatherInformationItemProps) {
   return (
-    <Grid item xs={3}>
+    <>
       <Text textAlign="center" color="#C4C4C4" textTransform="uppercase">
         {label}
       </Text>
       <Text textAlign="center" color="#9A9A9A">
         {value}
       </Text>
-    </Grid>
+    </>
   );
 }
 
 function DetailedWeatherInformation({
   items,
+  itemsPerRow = 4,
 }: DetailedWeatherInformationProps) {
   return (
     <Grid
       container
-      padding={2.5}
+      paddingY={2}
+      paddingX={1}
       sx={{
         backgroundColor: "#FDFCFC",
+        flexGrow: 1,
       }}
+      rowSpacing={1}
+      justifyContent="space-between"
       borderRadius={2}
     >
       {items.map((props) => (
-        <WeatherInfoItem key={props.label} {...props} />
+        <Grid item xs={12 / itemsPerRow}>
+          <WeatherInfoItem key={props.label} {...props} />
+        </Grid>
       ))}
     </Grid>
   );

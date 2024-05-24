@@ -2,6 +2,7 @@ import { thirdPartyBaseUrls } from "@/constants";
 import {
   Api64Response,
   IpLookupResponse,
+  CityDetails,
   Weather,
   WeatherForecast,
 } from "@/types";
@@ -99,10 +100,31 @@ const fetchWeatherForecastByCityName = async (
   }
 };
 
+const fetchCityOptionsFromTerm = async (
+  searchTerm: string
+): Promise<CityDetails[] | undefined> => {
+  try {
+    const response = await httpGet<CityDetails[]>(
+      `/api/autocomplete?search=${searchTerm}`,
+      {
+        onFetchError: () =>
+          console.error("Error getting city from search term"),
+      }
+    );
+
+    if (!response) return;
+
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export {
   fetchWeatherByCityName,
   fetchIpFromClient,
   fetchCityFromIp,
   fetchWeatherForecastByCityName,
+  fetchCityOptionsFromTerm,
   httpGet,
 };

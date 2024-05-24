@@ -1,18 +1,19 @@
-import { useState, useEffect, ChangeEvent } from "react";
-import { Button, LinkButton, Stack, TextInput } from "@/components/base";
+import { useState, useEffect } from "react";
+import { LinkButton, Stack } from "@/components/base";
 import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
 import { fetchWeatherByCityName } from "@/utils/api";
 import {
   RealtimeWeatherReport,
   DetailedWeatherInformation,
   HomeSkeleton,
+  SelectCityForm,
 } from "@/components/compositions";
-import { useAutoDetectClientCity } from "@/hooks";
+// import { useAutoDetectClientCity } from "@/hooks";
 import { format } from "date-fns";
 import { ROUTES, dateFormats } from "@/constants";
+import { locationToLocationId } from "@/utils/textFormatters";
 
 export default function Home() {
-  const [inputCity, setInputCity] = useState<string>();
   const [city, setCity] = useState<string>();
   const [isFetchingCityWeather, setIsFetchingCityWeather] =
     useState<boolean>(false);
@@ -21,25 +22,25 @@ export default function Home() {
     dispatchers: { setLocationWeather },
     helpers: { isCityWeatherCached },
   } = useWeatherContext();
-  const { city: clientCity } = useAutoDetectClientCity();
+  // const { city: clientCity } = useAutoDetectClientCity();
+  const cityWeatherReport = city ? locations[locationToLocationId(city)] : null;
 
-  const cityWeatherReport = city ? locations[city] : null;
-
-  useEffect(() => {
-    if (!clientCity) return;
-    setCity(clientCity);
-    setInputCity(clientCity);
-  }, [clientCity]);
+  // useEffect(() => {
+  //   if (!clientCity) return;
+  //   setCity(clientCity);
+  // }, [clientCity]);
 
   useEffect(() => {
     (async function () {
       try {
-        if (city && !isCityWeatherCached(city)) {
+        if (!city) return;
+        const cityId = locationToLocationId(city);
+        if (!isCityWeatherCached(cityId)) {
           setIsFetchingCityWeather(true);
           const weatherResponse = await fetchWeatherByCityName(city);
           setIsFetchingCityWeather(false);
 
-          if (weatherResponse) setLocationWeather(city, weatherResponse);
+          if (weatherResponse) setLocationWeather(cityId, weatherResponse);
         }
       } catch (error) {
         setIsFetchingCityWeather(false);
@@ -48,29 +49,11 @@ export default function Home() {
     })();
   }, [city]);
 
-  const handleCityInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputCity(event.target.value);
-  };
-
-  const handleCitySearchClick = () => {
-    setCity(inputCity);
-  };
-
   const isWeatherReportAvailable = !isFetchingCityWeather && cityWeatherReport;
 
   return (
     <Stack direction="column" spacing={3}>
-      <Stack direction="row" spacing={1}>
-        <TextInput
-          onChange={handleCityInputChange}
-          value={inputCity}
-          leftIcon="search"
-          fullWidth
-        />
-        <Button variant="text" size="small" onClick={handleCitySearchClick}>
-          Search
-        </Button>
-      </Stack>
+      <SelectCityForm onCitySelected={setCity} />
       {!isWeatherReportAvailable ? <HomeSkeleton /> : null}
       {isWeatherReportAvailable ? (
         <>
@@ -80,7 +63,7 @@ export default function Home() {
               {
                 label: "Local time",
                 value: format(
-                  cityWeatherReport.localTime,
+                  cityWeatherReport.location.localTime,
                   dateFormats.hourMinutes
                 ),
               },
@@ -99,7 +82,7 @@ export default function Home() {
             ]}
           />
           <LinkButton
-            href={`${ROUTES.CITY_DETAILS}/${city}`}
+            href={`${ROUTES.CITY_DETAILS}/${cityWeatherReport.location.id}`}
             variant="outlined"
             fullWidth
           >

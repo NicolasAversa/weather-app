@@ -1,7 +1,7 @@
 import { dateFormats, thirdPartyBaseUrls } from "@/constants";
 import { ForecastApiResponse, WeatherForecast } from "@/types";
 import { httpGet } from "@/utils/api";
-import { remapForecast } from "@/utils/remappers";
+import { remapForecastResponse } from "@/utils/remappers";
 import { parse, addDays, eachDayOfInterval, format } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -57,7 +57,7 @@ export default async function getForecast(
         );
 
         if (!response) return;
-        const remappedResponse = remapForecast(response);
+        const remappedResponse = remapForecastResponse(response);
         return remappedResponse;
       }
     );

@@ -1,7 +1,7 @@
 import { thirdPartyBaseUrls } from "@/constants";
-import { CurrentWeatherApiResponse, Weather } from "@/types";
+import { RealTimeWeatherApiResponse, Weather } from "@/types";
 import { httpGet } from "@/utils/api";
-import { remapWeatherInformation } from "@/utils/remappers";
+import { remapRealTimeWeatherResponse } from "@/utils/remappers";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const baseUrl = `${thirdPartyBaseUrls.weatherApi}/current.json`;
@@ -26,7 +26,7 @@ export default async function getWeather(
     const url = new URL(baseUrl);
     url.searchParams.append("q", query.city as string);
 
-    const response = await httpGet<CurrentWeatherApiResponse>(
+    const response = await httpGet<RealTimeWeatherApiResponse>(
       url.toString(),
       options
     );
@@ -35,7 +35,7 @@ export default async function getWeather(
       throw new Error("The response for the weather endpoint is undefined");
     }
 
-    const remappedResponse: Weather = remapWeatherInformation(response);
+    const remappedResponse: Weather = remapRealTimeWeatherResponse(response);
     res.status(200).json(remappedResponse);
   } catch (error) {
     console.error(error);

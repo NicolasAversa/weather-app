@@ -1,6 +1,6 @@
 import { thirdPartyBaseUrls } from "@/constants";
 import { IpLookupResponse } from "@/types";
-import { stringifyLocation } from "@/utils/textFormatters";
+import { buildLocationLabel } from "@/utils/textFormatters";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const baseUrl = `${thirdPartyBaseUrls.weatherApi}/ip.json`;
@@ -29,7 +29,7 @@ export default async function getClientCity(
     const parsedResponse: IpLookupResponse = await response.json();
 
     const { city, region, country_name } = parsedResponse;
-    const location = stringifyLocation(city, region, country_name);
+    const location = buildLocationLabel(city, region, country_name);
     res.status(200).json(location);
   } catch (error) {
     console.error(error);

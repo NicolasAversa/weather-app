@@ -1,4 +1,4 @@
-const stringifyLocation = (
+const buildLocationLabel = (
   name: string,
   region: string,
   country: string
@@ -14,4 +14,4 @@ const locationToLocationId = (location: string): string => {
   return locationId;
 };
 
-export { stringifyLocation, locationToLocationId };
+export { buildLocationLabel, locationToLocationId };

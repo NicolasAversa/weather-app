@@ -1,5 +1,6 @@
-import { thirdPartyBaseUrls } from "@/constants";
-import { Api64Response, CityDetails, Weather, WeatherForecast } from "@/types";
+import { API_ROUTES, dateFormats, thirdPartyBaseUrls } from "@/constants";
+import { FORECAST_DAYS_AMOUNT } from "@/constants/product";
+import { Ip64Response, CityDetails, Weather, WeatherForecast } from "@/types";
 import { format, addDays } from "date-fns";
 
 interface HttpsClientOptions extends RequestInit {
@@ -28,10 +29,13 @@ const fetchWeatherByCityName = async (
   name: string
 ): Promise<Weather | undefined> => {
   try {
-    const response = await httpGet<Weather>(`/api/weather?city=${name}`, {
-      onFetchError: () =>
-        console.error(`Error fetching current weather for: ${name}`),
-    });
+    const response = await httpGet<Weather>(
+      `${API_ROUTES.weather}?city=${name}`,
+      {
+        onFetchError: () =>
+          console.error(`Error fetching current weather for: ${name}`),
+      }
+    );
 
     return response;
   } catch (error) {
@@ -41,7 +45,7 @@ const fetchWeatherByCityName = async (
 
 const fetchIpFromClient = async (): Promise<string | undefined> => {
   try {
-    const response = await httpGet<Api64Response>(
+    const response = await httpGet<Ip64Response>(
       `${thirdPartyBaseUrls.api64}?format=json`,
       {
         onFetchError: () => console.error("Error getting client's IP address"),
@@ -58,10 +62,13 @@ const fetchIpFromClient = async (): Promise<string | undefined> => {
 
 const fetchCityFromIp = async (ip: string): Promise<string | undefined> => {
   try {
-    const response = await httpGet<string>(`/api/client-city?ip=${ip}`, {
-      onFetchError: () =>
-        console.error("Error getting city from client's IP address"),
-    });
+    const response = await httpGet<string>(
+      `${API_ROUTES.clientCity}?ip=${ip}`,
+      {
+        onFetchError: () =>
+          console.error("Error getting city from client's IP address"),
+      }
+    );
 
     if (!response) return;
 
@@ -75,11 +82,13 @@ const fetchWeatherForecastByCityName = async (
   name: string
 ): Promise<WeatherForecast[] | undefined> => {
   try {
+    const forecastDate = format(
+      addDays(new Date(), 1),
+      dateFormats.yearMonthDay
+    );
+
     const response = await httpGet<WeatherForecast[]>(
-      `/api/forecast?city=${name}&startDay=${format(
-        addDays(new Date(), 1),
-        "yyyy-MM-dd"
-      )}&days=${5}`,
+      `${API_ROUTES.forecast}?city=${name}&startDay=${forecastDate}&days=${FORECAST_DAYS_AMOUNT}`,
       {
         onFetchError: () =>
           console.error(`Error fetching current city weather for ${name}`),
@@ -96,7 +105,7 @@ const fetchCityOptionsFromTerm = async (
 ): Promise<CityDetails[] | undefined> => {
   try {
     const response = await httpGet<CityDetails[]>(
-      `/api/autocomplete?search=${searchTerm}`,
+      `${API_ROUTES.autocomplete}?search=${searchTerm}`,
       {
         onFetchError: () =>
           console.error("Error getting city from search term"),

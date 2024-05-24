@@ -2,20 +2,20 @@ import { dateFormats } from "@/constants";
 import {
   AutocompleteApiOption,
   CityDetails,
-  CurrentWeatherApiResponse,
+  RealTimeWeatherApiResponse,
   ForecastApiResponse,
   Weather,
   WeatherForecast,
 } from "@/types";
 import { parse } from "date-fns";
-import { locationToLocationId, stringifyLocation } from "./textFormatters";
+import { locationToLocationId, buildLocationLabel } from "./textFormatters";
 
 const remapLocation = (
-  location: CurrentWeatherApiResponse["location"]
+  location: RealTimeWeatherApiResponse["location"]
 ): Weather["location"] => {
   const { name, region, localtime, country } = location;
 
-  const locationLabel = stringifyLocation(name, region, country);
+  const locationLabel = buildLocationLabel(name, region, country);
   const locationId = locationToLocationId(locationLabel);
 
   return {
@@ -27,8 +27,8 @@ const remapLocation = (
   };
 };
 
-const remapWeatherInformation = (
-  weather: CurrentWeatherApiResponse
+const remapRealTimeWeatherResponse = (
+  weather: RealTimeWeatherApiResponse
 ): Weather => {
   return {
     location: remapLocation(weather.location),
@@ -47,7 +47,9 @@ const remapWeatherInformation = (
   };
 };
 
-const remapForecast = (weather: ForecastApiResponse): WeatherForecast[] => {
+const remapForecastResponse = (
+  weather: ForecastApiResponse
+): WeatherForecast[] => {
   const forecast: WeatherForecast[] = weather.forecast.forecastday.map(
     ({ date, day }) => ({
       location: remapLocation(weather.location),
@@ -85,4 +87,8 @@ const remapCityDetails = (cityDetails: AutocompleteApiOption): CityDetails => {
   };
 };
 
-export { remapWeatherInformation, remapForecast, remapCityDetails };
+export {
+  remapRealTimeWeatherResponse,
+  remapForecastResponse,
+  remapCityDetails,
+};

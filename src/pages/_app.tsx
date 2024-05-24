@@ -7,6 +7,7 @@ import { Container } from "@mui/material";
 import { Box } from "@/components/base";
 import { Navbar, NavbarProps } from "@/components/compositions";
 import { ROUTES } from "@/constants";
+import { FAVORITE_CITIES_LOCAL_STORAGE_ID } from "@/constants/ids";
 import "@/app/globals.css";
 import "@fontsource/metropolis/400.css";
 import "@fontsource/metropolis/500.css";
@@ -24,7 +25,10 @@ const NAVBAR_ITEMS: NavbarProps["pages"] = [
 ];
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [favoriteCities] = useLocalStorage("favoriteCities", []);
+  const [favoriteCities] = useLocalStorage(
+    FAVORITE_CITIES_LOCAL_STORAGE_ID,
+    []
+  );
 
   return (
     <WeatherProvider

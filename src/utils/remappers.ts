@@ -8,14 +8,29 @@ import {
   WeatherForecast,
 } from "@/types";
 import { parse } from "date-fns";
+import { locationToLocationId, stringifyLocation } from "./textFormatters";
+
+const remapLocation = (
+  location: CurrentWeatherApiResponse["location"]
+): Weather["location"] => {
+  const { name, region, localtime, country } = location;
+
+  const locationLabel = stringifyLocation(name, region, country);
+
+  return {
+    name,
+    region,
+    localTime: localtime,
+    label: locationLabel,
+    id: locationToLocationId(locationLabel),
+  };
+};
 
 const remapWeatherInformation = (
   weather: CurrentWeatherApiResponse
 ): Weather => {
   return {
-    city: weather.location.name,
-    region: weather.location.region,
-    localTime: weather.location.localtime,
+    location: remapLocation(weather.location),
     cloudPercentage: weather.current.cloud,
     humidity: weather.current.humidity,
     temperature: {
@@ -34,6 +49,7 @@ const remapWeatherInformation = (
 const remapForecast = (weather: ForecastApiResponse): WeatherForecast[] => {
   const forecast: WeatherForecast[] = weather.forecast.forecastday.map(
     ({ date, day }) => ({
+      location: remapLocation(weather.location),
       city: weather.location.name,
       region: weather.location.region,
       localTime: weather.location.localtime,

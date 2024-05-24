@@ -26,7 +26,7 @@ const httpGet = async <TResponse>(
     const parsedResponse: TResponse = await response.json();
     return parsedResponse;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -64,17 +64,14 @@ const fetchIpFromClient = async (): Promise<string | undefined> => {
 
 const fetchCityFromIp = async (ip: string): Promise<string | undefined> => {
   try {
-    const response = await httpGet<IpLookupResponse>(
-      `/api/client-city?ip=${ip}`,
-      {
-        onFetchError: () =>
-          console.error("Error getting city from client's IP address"),
-      }
-    );
+    const response = await httpGet<string>(`/api/client-city?ip=${ip}`, {
+      onFetchError: () =>
+        console.error("Error getting city from client's IP address"),
+    });
 
     if (!response) return;
 
-    return response.city;
+    return response;
   } catch (error) {
     console.error(error);
   }

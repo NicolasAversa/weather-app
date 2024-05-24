@@ -16,13 +16,14 @@ const remapLocation = (
   const { name, region, localtime, country } = location;
 
   const locationLabel = stringifyLocation(name, region, country);
+  const locationId = locationToLocationId(locationLabel);
 
   return {
     name,
     region,
     localTime: localtime,
     label: locationLabel,
-    id: locationToLocationId(locationLabel),
+    id: locationId,
   };
 };
 

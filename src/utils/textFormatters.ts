@@ -2,10 +2,14 @@ const stringifyLocation = (
   name: string,
   region: string,
   country: string
-): string => `${name}, ${region}, ${country}`;
+): string => [name, region, country].join(", ");
 
 const locationToLocationId = (location: string): string => {
-  const locationId = location.toLowerCase().replace(",", "").replace(" ", "-");
+  const locationId = location
+    .split(" ")
+    .map((location) => location.replace(",", "").trim())
+    .join("-")
+    .toLowerCase();
 
   return locationId;
 };

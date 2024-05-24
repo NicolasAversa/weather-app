@@ -1,4 +1,6 @@
 import { thirdPartyBaseUrls } from "@/constants";
+import { IpLookupResponse } from "@/types";
+import { stringifyLocation } from "@/utils/textFormatters";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const baseUrl = `${thirdPartyBaseUrls.weatherApi}/ip.json`;
@@ -10,7 +12,7 @@ const options: RequestInit = {
   },
 };
 
-export default async function getWeather(
+export default async function getClientCity(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -24,9 +26,11 @@ export default async function getWeather(
     url.searchParams.append("q", query.ip as string);
 
     const response = await fetch(url.toString(), options);
-    const parsedResponse = await response.json();
+    const parsedResponse: IpLookupResponse = await response.json();
 
-    res.status(200).json(parsedResponse);
+    const { city, region, country_name } = parsedResponse;
+    const location = stringifyLocation(city, region, country_name);
+    res.status(200).json(location);
   } catch (error) {
     console.error(error);
     res.status(500).json(error);

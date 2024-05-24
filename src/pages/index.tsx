@@ -8,7 +8,7 @@ import {
   HomeSkeleton,
   SelectCityForm,
 } from "@/components/compositions";
-// import { useAutoDetectClientCity } from "@/hooks";
+import { useAutoDetectClientCity } from "@/hooks";
 import { format } from "date-fns";
 import { ROUTES, dateFormats } from "@/constants";
 import { locationToLocationId } from "@/utils/textFormatters";
@@ -22,13 +22,13 @@ export default function Home() {
     dispatchers: { setLocationWeather },
     helpers: { isCityWeatherCached },
   } = useWeatherContext();
-  // const { city: clientCity } = useAutoDetectClientCity();
+  const { city: clientCity } = useAutoDetectClientCity();
   const cityWeatherReport = city ? locations[locationToLocationId(city)] : null;
 
-  // useEffect(() => {
-  //   if (!clientCity) return;
-  //   setCity(clientCity);
-  // }, [clientCity]);
+  useEffect(() => {
+    if (!clientCity) return;
+    setCity(clientCity);
+  }, [clientCity]);
 
   useEffect(() => {
     (async function () {

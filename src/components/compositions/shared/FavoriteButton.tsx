@@ -1,7 +1,5 @@
 import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
-import { IconButton } from "@mui/material";
+import { IconButton, IconProps } from "@/components/base";
 
 interface FavoriteButtonProps {
   cityId: string;
@@ -15,19 +13,13 @@ function FavoriteButton({ cityId }: FavoriteButtonProps) {
 
   const isCitySavedAsFavorite = isFavoriteCity(cityId);
 
-  const IconComponent = isCitySavedAsFavorite
-    ? StarIcon
-    : StarBorderOutlinedIcon;
+  const icon: IconProps["as"] = isCitySavedAsFavorite ? "star" : "starBorder";
 
   const handleClick = isCitySavedAsFavorite
     ? removeLocationToFavorites
     : saveLocationToFavorites;
 
-  return (
-    <IconButton onClick={() => handleClick(cityId)}>
-      <IconComponent />
-    </IconButton>
-  );
+  return <IconButton as={icon} onClick={() => handleClick(cityId)} />;
 }
 
 export { FavoriteButton };

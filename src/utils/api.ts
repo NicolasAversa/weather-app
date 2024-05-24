@@ -1,12 +1,6 @@
 import { thirdPartyBaseUrls } from "@/constants";
-import {
-  Api64Response,
-  IpLookupResponse,
-  CityDetails,
-  Weather,
-  WeatherForecast,
-} from "@/types";
-import { format } from "date-fns";
+import { Api64Response, CityDetails, Weather, WeatherForecast } from "@/types";
+import { format, addDays } from "date-fns";
 
 interface HttpsClientOptions extends RequestInit {
   onFetchError?: () => void;
@@ -83,7 +77,7 @@ const fetchWeatherForecastByCityName = async (
   try {
     const response = await httpGet<WeatherForecast[]>(
       `/api/forecast?city=${name}&startDay=${format(
-        new Date(),
+        addDays(new Date(), 1),
         "yyyy-MM-dd"
       )}&days=${5}`,
       {

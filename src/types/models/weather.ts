@@ -24,6 +24,7 @@ type WeatherForecast = Pick<Weather, "location" | "humidity" | "uv"> & {
   maximumTemperature: Weather["temperature"];
   minimumTemperature: Weather["temperature"];
   maximumWindSpeed: Weather["windSpeed"];
+  chancesOfRain: number;
   date: Date;
 };
 

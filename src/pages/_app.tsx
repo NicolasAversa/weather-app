@@ -7,6 +7,7 @@ import { Container } from "@mui/material";
 import { Box } from "@/components/base";
 import { Navbar, NavbarProps } from "@/components/compositions";
 import { ROUTES } from "@/constants";
+import "@/app/globals.css";
 import "@fontsource/metropolis/400.css";
 import "@fontsource/metropolis/500.css";
 import "@fontsource/metropolis/600.css";

@@ -1,37 +1,49 @@
 import { format } from "date-fns";
-import { Box, Stack, Text } from "@/components/base";
+import { Heading, Stack } from "@/components/base";
 import { dateFormats } from "@/constants";
+import { WeatherForecast } from "@/types";
+import { DetailedWeatherInformation } from "../shared/DetailedWeatherInformation";
 
 interface ForecastItemProps {
-  date: Date;
-  maximumTemperature: number;
-  minimumTemperature: number;
-  cloudPercentage: number;
+  weather: WeatherForecast;
 }
 
-function ForecastItem({
-  cloudPercentage,
-  date,
-  maximumTemperature,
-  minimumTemperature,
-}: ForecastItemProps) {
+function ForecastItem({ weather }: ForecastItemProps) {
   return (
-    <Box>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        paddingX={2}
-        paddingY={1}
-      >
-        <Text>{format(date, dateFormats.dayMonth)}</Text>
-        <Stack direction="row" justifyContent="space-between">
-          <Text>{maximumTemperature}</Text>
-          <Text>----</Text>
-          <Text>{minimumTemperature}</Text>
-        </Stack>
-        <Text>{cloudPercentage}</Text>
-      </Stack>
-    </Box>
+    <Stack backgroundColor="#FDFCFC" borderRadius={2} spacing={1.5}>
+      <Heading as="h6" fontWeight="regular">
+        {format(weather.date, dateFormats.dayMonth)}
+      </Heading>
+      <DetailedWeatherInformation
+        itemsPerRow={3}
+        items={[
+          {
+            label: "Max. temperature",
+            value: `${weather.maximumTemperature.celsius}º`,
+          },
+          {
+            label: "Min. temperature",
+            value: `${weather.minimumTemperature.celsius}º`,
+          },
+          {
+            label: "Humidity",
+            value: `${weather.humidity}%`,
+          },
+          {
+            label: "Wind speed",
+            value: `${weather.maximumWindSpeed.kilometersPerHour} km/h`,
+          },
+          {
+            label: "UV factor",
+            value: `${weather.uv} km/h`,
+          },
+          {
+            label: "Chances of rain",
+            value: `${weather.chancesOfRain}%`,
+          },
+        ]}
+      />
+    </Stack>
   );
 }
 

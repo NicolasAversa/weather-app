@@ -1,0 +1,3 @@
+const FAVORITE_CITIES_LOCAL_STORAGE_ID = "favoriteCities";
+
+export { FAVORITE_CITIES_LOCAL_STORAGE_ID };

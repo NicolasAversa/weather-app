@@ -5,5 +5,6 @@ export * from "./typography/Heading";
 export * from "./feedback/Skeleton";
 export * from "./form/TextInput";
 export * from "./form/Button";
+export * from "./form/Select";
 export * from "./dataDisplay/Icon";
 export * from "./navigation/LinkButton";

@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
-import Link from "next/link";
+import { useWeatherContext } from "@/context";
 import { ROUTES } from "@/constants";
 import { fetchWeatherByCityName } from "@/utils/api";
 import { getWeatherTypeFromWeather } from "@/utils/weather";
 import { Heading, Stack, Text } from "@/components/base";
 import { WeatherIcon, DegreesIndicator } from "@/components/compositions";
 import { Weather } from "@/types";
+import Link from "next/link";
 
 interface FavoriteCityItemProps {
-  weather?: Weather;
+  weatherReport?: Weather;
 }
 
-function FavoriteCityItem({ weather }: FavoriteCityItemProps) {
+function FavoriteCityItem({ weatherReport }: FavoriteCityItemProps) {
   return (
     <Link
-      href={encodeURI(`${ROUTES.CITY_DETAILS}/${weather?.location.id}`)}
+      href={encodeURI(`${ROUTES.CITY_DETAILS}/${weatherReport?.location.id}`)}
       passHref
       style={{ textDecoration: "none" }}
     >
@@ -27,16 +27,16 @@ function FavoriteCityItem({ weather }: FavoriteCityItemProps) {
         alignItems="center"
         direction="row"
       >
-        {weather ? (
+        {weatherReport ? (
           <>
             <Stack alignItems="start">
-              <Heading as="h5">{weather.location.name}</Heading>
+              <Heading as="h5">{weatherReport.location.name}</Heading>
               <DegreesIndicator
-                temperature={weather.temperature.celsius}
+                temperature={weatherReport.temperature.celsius}
                 scale="celsius"
               />
             </Stack>
-            <WeatherIcon type={getWeatherTypeFromWeather(weather)} />
+            <WeatherIcon type={getWeatherTypeFromWeather(weatherReport)} />
           </>
         ) : null}
       </Stack>
@@ -51,18 +51,21 @@ function FavoriteCitySection() {
     dispatchers: { setLocationWeather },
   } = useWeatherContext();
   const [isClient, setIsClient] = useState(false);
+
   const isFavoriteLocationsEmpty = favoriteCities.length === 0;
 
   useEffect(() => {
     setIsClient(true);
     if (isFavoriteLocationsEmpty) return;
 
-    const locationPromises = favoriteCities.map(fetchWeatherByCityName);
+    const weatherReportPromises = favoriteCities.map(fetchWeatherByCityName);
+
     (async function () {
-      const results = await Promise.all(locationPromises);
-      results.forEach((weather, index) => {
-        if (!weather) return;
-        setLocationWeather(favoriteCities[index], weather);
+      const weatherReports = await Promise.all(weatherReportPromises);
+
+      weatherReports.forEach((report, index) => {
+        if (!report) return;
+        setLocationWeather(favoriteCities[index], report);
       });
     })();
   }, []);
@@ -78,7 +81,10 @@ function FavoriteCitySection() {
   return (
     <Stack spacing={1}>
       {favoriteCities.map((city) => (
-        <FavoriteCityItem key={city} weather={getCityRealTimeWeather(city)} />
+        <FavoriteCityItem
+          key={city}
+          weatherReport={getCityRealTimeWeather(city)}
+        />
       ))}
     </Stack>
   );

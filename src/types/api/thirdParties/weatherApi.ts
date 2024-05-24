@@ -69,15 +69,15 @@ type ForecastDay = {
   day: Day;
 };
 
-interface CurrentWeatherApiResponse {
+interface RealTimeWeatherApiResponse {
   location: Location;
   current: CurrentWeather;
 }
 
-interface ForecastApiResponse extends CurrentWeatherApiResponse {
+interface ForecastApiResponse extends RealTimeWeatherApiResponse {
   forecast: {
     forecastday: ForecastDay[];
   };
 }
 
-export type { CurrentWeatherApiResponse, ForecastApiResponse };
+export type { RealTimeWeatherApiResponse, ForecastApiResponse };

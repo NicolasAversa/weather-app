@@ -20,7 +20,7 @@ function RealtimeWeatherReport({ weather }: RealtimeWeatherReportProps) {
       <Stack spacing={1} alignItems="center">
         <Stack direction="row">
           <Heading as="h4" fontWeight="semiBold">
-            {weather.location.name}
+            {weather.location.name}, {weather.location.region}
           </Heading>
           <FavoriteButton cityId={weather.location.id} />
         </Stack>

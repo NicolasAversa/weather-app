@@ -11,7 +11,7 @@ interface DetailedWeatherInformationProps {
   itemsPerRow?: number;
 }
 
-function WeatherInfoItem({ label, value }: WeatherInformationItemProps) {
+function WeatherInformationItem({ label, value }: WeatherInformationItemProps) {
   return (
     <>
       <Text textAlign="center" color="#C4C4C4" textTransform="uppercase">
@@ -43,7 +43,7 @@ function DetailedWeatherInformation({
     >
       {items.map((props) => (
         <Grid item xs={12 / itemsPerRow}>
-          <WeatherInfoItem key={props.label} {...props} />
+          <WeatherInformationItem key={props.label} {...props} />
         </Grid>
       ))}
     </Grid>

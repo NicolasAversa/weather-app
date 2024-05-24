@@ -9,15 +9,13 @@ import { WeatherIcon, DegreesIndicator } from "@/components/compositions";
 import { Weather } from "@/types";
 
 interface FavoriteCityItemProps {
-  city: string;
   weather?: Weather;
 }
 
-function FavoriteCityItem({ city, weather }: FavoriteCityItemProps) {
+function FavoriteCityItem({ weather }: FavoriteCityItemProps) {
   return (
     <Link
-      key={city}
-      href={encodeURI(`${ROUTES.CITY_DETAILS}/${city}`)}
+      href={encodeURI(`${ROUTES.CITY_DETAILS}/${weather?.location.id}`)}
       passHref
       style={{ textDecoration: "none" }}
     >
@@ -32,7 +30,7 @@ function FavoriteCityItem({ city, weather }: FavoriteCityItemProps) {
         {weather ? (
           <>
             <Stack alignItems="start">
-              <Heading as="h5">{city}</Heading>
+              <Heading as="h5">{weather.location.name}</Heading>
               <DegreesIndicator
                 temperature={weather.temperature.celsius}
                 scale="celsius"
@@ -80,11 +78,7 @@ function FavoriteCitySection() {
   return (
     <Stack spacing={1}>
       {favoriteCities.map((city) => (
-        <FavoriteCityItem
-          key={city}
-          city={city}
-          weather={getCityRealTimeWeather(city)}
-        />
+        <FavoriteCityItem key={city} weather={getCityRealTimeWeather(city)} />
       ))}
     </Stack>
   );

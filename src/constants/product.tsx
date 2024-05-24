@@ -1,0 +1,3 @@
+const FORECAST_DAYS_AMOUNT = 5;
+
+export { FORECAST_DAYS_AMOUNT };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { LinkButton, Stack } from "@/components/base";
-import { useWeatherContext } from "@/context/weatherContext/hooks/useWeatherContext";
+import { useWeatherContext } from "@/context";
 import { fetchWeatherByCityName } from "@/utils/api";
 import {
   RealtimeWeatherReport,
@@ -14,75 +14,80 @@ import { ROUTES, dateFormats } from "@/constants";
 import { locationToLocationId } from "@/utils/textFormatters";
 
 export default function Home() {
-  const [city, setCity] = useState<string>();
-  const [isFetchingCityWeather, setIsFetchingCityWeather] =
-    useState<boolean>(false);
+  const [selectedCity, setSelectedCity] = useState<string>();
+  const [isFetchingWeather, setIsFetchingWeather] = useState<boolean>(false);
   const {
     state: { locations },
     dispatchers: { setLocationWeather },
     helpers: { isCityWeatherCached },
   } = useWeatherContext();
-  const { city: clientCity } = useAutoDetectClientCity();
-  const cityWeatherReport = city ? locations[locationToLocationId(city)] : null;
+  const { city: autoDetectedClientCity } = useAutoDetectClientCity();
+
+  const selectedCityWeatherReport = selectedCity
+    ? locations[locationToLocationId(selectedCity)]
+    : null;
 
   useEffect(() => {
-    if (!clientCity) return;
-    setCity(clientCity);
-  }, [clientCity]);
+    if (!autoDetectedClientCity) return;
+    setSelectedCity(autoDetectedClientCity);
+  }, [autoDetectedClientCity]);
 
   useEffect(() => {
     (async function () {
       try {
-        if (!city) return;
-        const cityId = locationToLocationId(city);
+        if (!selectedCity) return;
+        const cityId = locationToLocationId(selectedCity);
+
         if (!isCityWeatherCached(cityId)) {
-          setIsFetchingCityWeather(true);
-          const weatherResponse = await fetchWeatherByCityName(city);
-          setIsFetchingCityWeather(false);
+          setIsFetchingWeather(true);
+
+          const weatherResponse = await fetchWeatherByCityName(selectedCity);
+          setIsFetchingWeather(false);
 
           if (weatherResponse) setLocationWeather(cityId, weatherResponse);
         }
       } catch (error) {
-        setIsFetchingCityWeather(false);
+        setIsFetchingWeather(false);
         console.error(error);
       }
     })();
-  }, [city]);
+  }, [selectedCity]);
 
-  const isWeatherReportAvailable = !isFetchingCityWeather && cityWeatherReport;
+  const isWeatherReportAvailable =
+    !isFetchingWeather && selectedCityWeatherReport;
 
   return (
     <Stack direction="column" spacing={3}>
-      <SelectCityForm onCitySelected={setCity} />
+      <SelectCityForm onCitySelected={setSelectedCity} />
       {!isWeatherReportAvailable ? <HomeSkeleton /> : null}
       {isWeatherReportAvailable ? (
         <>
-          <RealtimeWeatherReport weather={cityWeatherReport} />
+          <RealtimeWeatherReport weather={selectedCityWeatherReport} />
           <DetailedWeatherInformation
             items={[
               {
                 label: "Local time",
                 value: format(
-                  cityWeatherReport.location.localTime,
+                  selectedCityWeatherReport.location.localTime,
                   dateFormats.hourMinutes
                 ),
               },
               {
                 label: "Wind speed",
-                value: `${cityWeatherReport.windSpeed.kilometersPerHour} Km/h`,
+                value: `${selectedCityWeatherReport.windSpeed.kilometersPerHour} Km/h`,
               },
               {
                 label: "Humidity",
-                value: `${cityWeatherReport.humidity}%`,
+                value: `${selectedCityWeatherReport.humidity}%`,
               },
               {
                 label: "Clouds",
-                value: `${cityWeatherReport.cloudPercentage}%`,
+                value: `${selectedCityWeatherReport.cloudPercentage}%`,
               },
             ]}
           />
           <LinkButton
-            href={`${ROUTES.CITY_DETAILS}/${cityWeatherReport.location.id}`}
+            href={`${ROUTES.CITY_DETAILS}/${selectedCityWeatherReport.location.id}`}
             variant="outlined"
             fullWidth
           >

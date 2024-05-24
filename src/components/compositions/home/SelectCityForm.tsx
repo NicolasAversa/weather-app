@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Option, Select } from "@/components/base";
 import { useAutocomplete } from "@/hooks";
 import { CityDetails } from "@/types";
-import { stringifyLocation } from "@/utils/textFormatters";
+import { buildLocationLabel } from "@/utils/textFormatters";
 
 interface SelectCityFormProps {
   onCitySelected: (city: string) => void;
@@ -10,7 +10,7 @@ interface SelectCityFormProps {
 
 const formatOption = (option: CityDetails): Option => {
   const { name, region, country } = option;
-  const location = stringifyLocation(name, region, country);
+  const location = buildLocationLabel(name, region, country);
 
   return {
     label: location,

@@ -5,7 +5,7 @@ import {
   fetchWeatherByCityName,
   fetchWeatherForecastByCityName,
 } from "@/utils/api";
-import { Stack } from "@/components/base";
+import { Heading, Stack } from "@/components/base";
 import { useRouter } from "next/router";
 
 export default function Location() {
@@ -43,15 +43,13 @@ export default function Location() {
         <RealtimeWeatherReport weather={realTimeWeather} />
       ) : null}
       {weatherForecast ? (
-        <Stack direction="column">
-          {weatherForecast?.map((weather) => (
-            <ForecastItem
-              date={weather.date}
-              cloudPercentage={weather.humidity}
-              maximumTemperature={weather.maximumTemperature.celsius}
-              minimumTemperature={weather.minimumTemperature.celsius}
-            />
-          ))}
+        <Stack direction="column" spacing={2}>
+          <Heading as="h5">Forecast for the next 5 days</Heading>
+          <Stack direction="column" spacing={2}>
+            {weatherForecast?.map((weather) => (
+              <ForecastItem weather={weather} />
+            ))}
+          </Stack>
         </Stack>
       ) : null}
     </>

@@ -1,5 +1,7 @@
 import { dateFormats } from "@/constants";
 import {
+  AutocompleteApiOption,
+  CityDetails,
   CurrentWeatherApiResponse,
   ForecastApiResponse,
   Weather,
@@ -12,6 +14,7 @@ const remapWeatherInformation = (
 ): Weather => {
   return {
     city: weather.location.name,
+    region: weather.location.region,
     localTime: weather.location.localtime,
     cloudPercentage: weather.current.cloud,
     humidity: weather.current.humidity,
@@ -31,6 +34,9 @@ const remapWeatherInformation = (
 const remapForecast = (weather: ForecastApiResponse): WeatherForecast[] => {
   const forecast: WeatherForecast[] = weather.forecast.forecastday.map(
     ({ date, day }) => ({
+      city: weather.location.name,
+      region: weather.location.region,
+      localTime: weather.location.localtime,
       date: parse(date, dateFormats.yearMonthDay, new Date()),
       humidity: day.avghumidity,
       maximumTemperature: {
@@ -53,4 +59,13 @@ const remapForecast = (weather: ForecastApiResponse): WeatherForecast[] => {
   return forecast;
 };
 
-export { remapWeatherInformation, remapForecast };
+const remapCityDetails = (cityDetails: AutocompleteApiOption): CityDetails => {
+  return {
+    id: cityDetails.id,
+    name: cityDetails.name,
+    region: cityDetails.region,
+    country: cityDetails.country,
+  };
+};
+
+export { remapWeatherInformation, remapForecast, remapCityDetails };

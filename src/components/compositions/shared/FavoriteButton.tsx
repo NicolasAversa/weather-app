@@ -4,16 +4,16 @@ import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import { IconButton } from "@mui/material";
 
 interface FavoriteButtonProps {
-  city: string;
+  cityId: string;
 }
 
-function FavoriteButton({ city }: FavoriteButtonProps) {
+function FavoriteButton({ cityId }: FavoriteButtonProps) {
   const {
     dispatchers: { saveLocationToFavorites, removeLocationToFavorites },
     helpers: { isFavoriteCity },
   } = useWeatherContext();
 
-  const isCitySavedAsFavorite = isFavoriteCity(city);
+  const isCitySavedAsFavorite = isFavoriteCity(cityId);
 
   const IconComponent = isCitySavedAsFavorite
     ? StarIcon
@@ -24,7 +24,7 @@ function FavoriteButton({ city }: FavoriteButtonProps) {
     : saveLocationToFavorites;
 
   return (
-    <IconButton onClick={() => handleClick(city)}>
+    <IconButton onClick={() => handleClick(cityId)}>
       <IconComponent />
     </IconButton>
   );

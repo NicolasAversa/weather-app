@@ -7,7 +7,9 @@ interface SkeletonProps
   extends Pick<MuiSkeletonProps, "variant" | "width" | "height"> {}
 
 function Skeleton(props: SkeletonProps) {
-  return <MuiSkeleton {...props} sx={{ borderRadius: 3 }} />;
+  return (
+    <MuiSkeleton {...props} sx={{ borderRadius: 3, transform: "unset" }} />
+  );
 }
 
 export { Skeleton };

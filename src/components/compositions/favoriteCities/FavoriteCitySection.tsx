@@ -3,7 +3,7 @@ import { useWeatherContext } from "@/context";
 import { ROUTES } from "@/constants";
 import { fetchWeatherByCityName } from "@/utils/api";
 import { getWeatherTypeFromWeather } from "@/utils/weather";
-import { Heading, Stack, Text } from "@/components/base";
+import { Heading, Skeleton, Stack, Text } from "@/components/base";
 import { WeatherIcon, DegreesIndicator } from "@/components/compositions";
 import { Weather } from "@/types";
 import Link from "next/link";
@@ -13,6 +13,7 @@ interface FavoriteCityItemProps {
 }
 
 function FavoriteCityItem({ weatherReport }: FavoriteCityItemProps) {
+  if (!weatherReport) return <Skeleton height={144} />;
   return (
     <Link
       href={encodeURI(`${ROUTES.CITY_DETAILS}/${weatherReport?.location.id}`)}
@@ -21,7 +22,7 @@ function FavoriteCityItem({ weatherReport }: FavoriteCityItemProps) {
     >
       <Stack
         padding={2.5}
-        backgroundColor="#EBEBEB"
+        backgroundColor="#F7F7F7"
         borderRadius={2}
         justifyContent="space-between"
         alignItems="center"
@@ -73,9 +74,7 @@ function FavoriteCitySection() {
   if (!isClient) return null;
 
   if (isFavoriteLocationsEmpty) {
-    return (
-      <Text padding={2}>You don't currently have any favorite city yet!</Text>
-    );
+    return <Text>You don't currently have any favorite city, yet!</Text>;
   }
 
   return (

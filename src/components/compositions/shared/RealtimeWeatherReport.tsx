@@ -20,9 +20,9 @@ function RealtimeWeatherReport({ weather }: RealtimeWeatherReportProps) {
       <Stack spacing={1} alignItems="center">
         <Stack direction="row">
           <Heading as="h4" fontWeight="semiBold">
-            {weather.city}
+            {weather.location.name}
           </Heading>
-          <FavoriteButton city={weather.city} />
+          <FavoriteButton cityId={weather.location.id} />
         </Stack>
         <DegreesIndicator
           temperature={weather.temperature.celsius}
